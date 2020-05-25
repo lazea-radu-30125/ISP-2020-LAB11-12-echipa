@@ -1,5 +1,6 @@
 package aut.utcluj.isp.ex3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import java.util.Map;
  * @author stefan
  */
 public class StockController {
+    private Map<String, List<Product>> catalogue;
     /**
      * Add product to catalogue
      *
@@ -15,7 +17,12 @@ public class StockController {
      * @apiNote: if products with the same products id already exists, assume that @param product has the same data
      */
     public void addProductToCatalogue(final Product product, final int quantity) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (!catalogue.containsKey(product.getId())){
+            catalogue.put(product.getId(),new ArrayList<>());
+        }
+        for(int i = 0; i < quantity; i++){
+            catalogue.get(product.getId()).add(product);
+        }
     }
 
     /**
@@ -24,7 +31,7 @@ public class StockController {
      * @return dictionary where the key is the product id and the value is an array of products with the same id
      */
     public Map<String, List<Product>> getCatalogue() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return catalogue;
     }
 
     /**
@@ -34,7 +41,7 @@ public class StockController {
      * @return - list of existing products with same id or null if not found
      */
     public List<Product> getProductsWithSameId(final String productId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return catalogue.get(productId);
     }
 
     /**
@@ -43,7 +50,11 @@ public class StockController {
      * @return
      */
     public int getTotalNumberOfProducts() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        int totalNumber = 0;
+        for( List<Product>products : catalogue.values()){
+            totalNumber += products.size();
+        }
+        return totalNumber;
     }
 
     /**
@@ -53,7 +64,12 @@ public class StockController {
      * @return true if at least one product was deleted or false instead
      */
     public boolean removeAllProductsWitProductId(final String productId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(catalogue.containsKey(productId)){
+            catalogue.remove(productId);
+            return true;
+        } else{
+            return false;
+        }
     }
 
     /**
@@ -64,6 +80,13 @@ public class StockController {
      * @return true if at least one product was updated or false instead
      */
     public boolean updateProductPriceByProductId(final String productId, final Double price) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(catalogue.containsKey(productId)){
+            for (Product products : catalogue.get(productId)) {
+                products.setPrice(price);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
